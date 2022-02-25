@@ -1,43 +1,60 @@
-import org.json.*;
-import java.util.ArrayList;
-
 int currentScene;
 int currentFrame;
 int tempo;
-org.json.JSONArray documento;
-ArrayList<org.json.JSONObject> frames = new ArrayList<org.json.JSONObject>();
+JSONArray documento;
+ArrayList<JSONObject> frames = new ArrayList<JSONObject>();
 Hotspot[] frameHotspots;
 boolean mudarFrame=false;
+
+int yInicial;
+int yImage=0;
+boolean touch=false;
+
+PImage imagem;
+int imageHeight;
+
 void setup(){
   fullScreen();
   noStroke();
   frameRate(60);
   currentFrame=0;
+  orientation(LANDSCAPE);
   
-  documento = loadJSONArray("/storage/emulated/0/Sketchbook/Player/adventurePlayer/files/adventure.json");
+  documento = loadJSONArray("adventure.json");
   for (int i=0; i<documento.size(); i++){
-    org.json.JSONObject frame= documento.getJSONObject(i);
+    JSONObject frame= documento.getJSONObject(i);
     frames.add(frame);
     }
     mostrarFrame();
     mostrarHotspot();
   }
 void draw(){
+
+  mostrarFrame();
+  mostrarHotspot();
+
+  //movimento();
+  
+  
 }
 void mouseReleased(){
   for (int j=0; j<frames.get(currentFrame).getJSONArray("hotspots").size(); j++) {
     if (frameHotspots[j].mouseChecar()){
       currentFrame=frameHotspots[j].destino;
       mostrarFrame();
-      //mostrarHotspot();
+      mostrarHotspot();
     };
   }
+  touch=false;
 }
 void mostrarFrame(){
-  PImage imagem = loadImage(frames.get(currentFrame).getString("frameImg"));
+  imagem = loadImage(frames.get(currentFrame).getString("frameImg"));
+
   imagem.resize(width,height);
-  background (imagem);
-}
+  //imageHeight= imagem.height;
+  image(imagem,0,0);
+  
+  }
 void mostrarHotspot(){
   frameHotspots= new Hotspot[frames.get(currentFrame).getJSONArray("hotspots").size()];
   for (int i=0; i<frames.get(currentFrame).getJSONArray("hotspots").size();i++){
@@ -45,4 +62,17 @@ void mostrarHotspot(){
     frameHotspots[i].fazerHotspot();
   }
 }
- 
+void mousePressed(){
+  touch=true;
+  yInicial=mouseY;
+}
+void movimento(){
+  if(touch){
+    if(mouseY>yInicial && yImage>=(height*(-1))){
+    yImage=yImage-60;
+    
+    }
+    else if(mouseY<yInicial && yImage<=1)
+    yImage=yImage+60;
+  }
+}
