@@ -9,12 +9,14 @@ class Hotspot{
     frameId= frames.get(currentFrame).getInt("id");
     x1 = frames.get(frameId).getJSONArray("hotspots").getJSONObject(hotspotId).getJSONArray("vertices").getJSONObject(0).getInt("x");
     y1 = frames.get(frameId).getJSONArray("hotspots").getJSONObject(hotspotId).getJSONArray("vertices").getJSONObject(0).getInt("y");
-    x3 = frames.get(frameId).getJSONArray("hotspots").getJSONObject(hotspotId).getJSONArray("vertices").getJSONObject(2).getInt("y");
+    x3 = frames.get(frameId).getJSONArray("hotspots").getJSONObject(hotspotId).getJSONArray("vertices").getJSONObject(2).getInt("x");
     y3 = frames.get(frameId).getJSONArray("hotspots").getJSONObject(hotspotId).getJSONArray("vertices").getJSONObject(2).getInt("y");
+    Mapear();
     destino=frames.get(frameId).getJSONArray("hotspots").getJSONObject(hotspotId).getInt("target");
   }
   void fazerHotspot(){
     fill(200, 50, 200, 80);
+    //movimentoHotspot();
     rect(x1,y1,(x3-x1),(y3-y1));
   }
   boolean mouseChecar(){
@@ -22,5 +24,15 @@ class Hotspot{
       return true;
     } else
     return false;
+  }
+  void Mapear(){
+  x1=int(map(x1,0,1280,0,width));
+  y1=int(map(y1,0,720,0,height));
+  x3=int(map(x3,0,1280,0, width));
+  y3=int(map(y3,0,720,0, height));
+  }
+  void movimentoHotspot(){
+    y1+=yImage;
+    y3+=yImage; 
   }
 }
